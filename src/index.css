@@ -7,7 +7,30 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+:root{
+  --white-color : #fff;
+  --header-background-color : linear-gradient(to bottom, #35adfc , #9fd7fc) ;
+  --primary-color : linear-gradient(to bottom, #35adfc , #9fd7fc);
+  --navbar-mobile-height : 200px;
+  font-size: 62.5%;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.btn{
+  padding: 9px 20px;
+}
+
+.btn:hover{
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.btn-primary{
+  background-image: var(--primary-color);
+  border: 0;
+  color: var(--white-color);
 }

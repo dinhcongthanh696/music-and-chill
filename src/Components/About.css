@@ -1,0 +1,10 @@
+.dark{
+    background-image: linear-gradient(to bottom,#2f3030,#646969);
+    color: #fff;
+}
+
+
+.light{
+    background-color: #fff;
+    color: black;
+}
