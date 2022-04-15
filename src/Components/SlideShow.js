@@ -6,6 +6,7 @@ import { faArrowRight , faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 function SlideShow({windowWidth}){
     const [currentSlideIndex,setCurrentSlideIndex] = useState(0);
+    const [isFocusedSlide,setFocusedSlide] = useState(false);
 
     const handleSlideClick = (index) => {
         if(index < 0) index = SLIDEARRAYS.length - 1;
@@ -13,16 +14,20 @@ function SlideShow({windowWidth}){
         setCurrentSlideIndex(index);
     }
 
+    const timeoutId = useRef();
+
 
     useEffect(() => {
-        const timeoutId = setTimeout(() => {
-            handleSlideClick(currentSlideIndex + 1);
-        },6000)
-
-        return () => {    
-            clearTimeout(timeoutId);
+        if(!isFocusedSlide){
+            timeoutId.current = setTimeout(() => {
+                handleSlideClick(currentSlideIndex + 1);
+            },6000)
         }
-    },[currentSlideIndex]) 
+        return () => {    
+            clearTimeout(timeoutId.current);
+        }
+    },[currentSlideIndex,isFocusedSlide]) 
+
     return (
         windowWidth > 768 &&
         <div className='slide-show'>
@@ -30,7 +35,13 @@ function SlideShow({windowWidth}){
             SLIDEARRAYS.map((slide,index) => {
                 return (
                     <div className={index === currentSlideIndex ? "slide-show__item slide-show__item--current" : "slide-show__item" }
-                    key={slide.slideCDN}>
+                    key={slide.slideCDN}
+                    onMouseOver={() => {
+                        setCurrentSlideIndex(index);
+                        setFocusedSlide(true);
+                    }}
+                    onMouseOut={() => setFocusedSlide(false)}
+                    >
                             <div className='slide-show__image-overlay'></div>
                             <img src={slide.slideCDN} className='slide-show__image'alt='slide' />
                     </div>

@@ -34,3 +34,12 @@ code {
   border: 0;
   color: var(--white-color);
 }
+
+
+@keyframes fadeOut {
+    from{
+      opacity: 1;
+    }to{
+      opacity: 0;
+    }
+}
