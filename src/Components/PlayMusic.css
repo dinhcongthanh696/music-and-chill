@@ -3,6 +3,36 @@
     height: 100px;
     width: 100%;
     position: fixed;
-    bottom: 10px;
+    bottom: 0px;
     z-index: 11;
+    display: flex;
+    justify-content: space-between;
+}
+
+.play-music__left{
+    display: flex;
+    justify-content: space-between;
+}
+.play-music__description{
+    flex: 2 0;
+}
+.play-music__image{
+    flex: 1;
+}
+.play-music__option{
+    flex: 1;
+
+}
+.play-music__icon{
+    margin-top: 20px;
+    font-size: 20px;
+    display: inline;
+}
+
+.play-music__right{
+
+}
+
+.play-music__center{
+
 }
