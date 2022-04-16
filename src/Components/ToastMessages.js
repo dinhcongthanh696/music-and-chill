@@ -6,16 +6,10 @@ function ToastMessages(){
     
     const handleAddNewSong = (toastMessage) => {
         let newToastId;
-        if(!Array.isArray(toastMessageIdsRef.current) || toastMessageIdsRef.current.length == 0 ){
+        if(toastMessages.length == 0 ){
             newToastId = 1;
-            toastMessageIdsRef.current = [newToastId];
         }else{
-            newToastId = toastMessageIdsRef.current[toastMessageIdsRef.current.length - 1] + 1;
-            toastMessageIdsRef.current = 
-            [
-                ...toastMessageIdsRef.current,
-                newToastId
-            ];
+            newToastId = toastMessages[toastMessages.length - 1].id + 1;
         }
 
         toastMessage.id = newToastId;  // add id for toastMessage
@@ -42,7 +36,6 @@ function ToastMessages(){
             if(toastMessagesRef.current.filter(toastMessage => {
                 return toastMessage.id === removedToastId
             }).length !== 0) {
-                console.log("Remove toast id : ",removedToastId);
                 const newToastMessages = [];
                 for(let i = 0 ; i < toastMessagesRef.current.length ; i++){
                     if(toastMessagesRef.current[i].id !== removedToastId){
@@ -51,12 +44,9 @@ function ToastMessages(){
                 } 
                 setToastMessages(newToastMessages); // for re-rendering
                 toastMessagesRef.current = newToastMessages;
-
-                toastMessageIdsRef.current = newToastMessages.map(toastMessage => toastMessage.id);
         }
     }
 
-    const toastMessageIdsRef = useRef();
     const toastMessagesRef = useRef();
 
     return (
