@@ -7,9 +7,13 @@ import PublicFooter from './Components/PublicFooter';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp , faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import ToastMessages from './Components/ToastMessages';
+import PlayMusic from './Components/PlayMusic';
 function App() {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [isDisplayedGototop,setDislayedGototop] = useState(false);
+  const [isDisplayedPlayMusic,setDisplayedPlayMusic] = useState(() => {
+      return localStorage.getItem("is-displayed-play-music") === "show";
+  });
 
   useEffect(() => {
     const handleResizeScreen = () => {
@@ -30,6 +34,7 @@ function App() {
 
   return (
     <div className="App">
+      <PlayMusic isDisplayedPlayMusic={isDisplayedPlayMusic} />
       <ToastMessages/>
       <a href='#top'></a>
       <PublicHeader windowWidth={windowWidth}/>
@@ -38,7 +43,11 @@ function App() {
       <PublicFooter/>
         <div className='go-to-top' style={{opacity : isDisplayedGototop ? 1 : 0}}>
           <a href='#top'> <FontAwesomeIcon icon={faArrowUp} /> GO TO TOP </a>
-        </div>
+        </div> 
+        <button onClick={() => {
+          setDisplayedPlayMusic(true);
+          localStorage.setItem("is-displayed-play-music","show");
+        }}>Play music</button>
     </div>
   );
 }
