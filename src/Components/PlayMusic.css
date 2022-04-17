@@ -12,14 +12,33 @@
 .play-music__left{
     display: flex;
     justify-content: space-between;
-    width: 33%;
+    width: 35%;
     flex: 1;
 }
 .play-music__description{
     flex: 2 0;
 }
-.play-music__image{
+.play-music__image-wrapper{
     flex: 1;
+}
+
+.play-music__song{
+    color: var(--white-color);
+    font-size: 1.6rem;
+}
+
+.play-music__image{
+    object-fit: contain;
+    width: 100px;
+    border-radius: 200px;
+}
+
+.play-music__image--playing{
+    animation: rotate linear 20s infinite;
+}
+
+.play-music__singer{
+    color: rgba(255, 254, 252,0.9);
 }
 .play-music__option{
     flex: 1.5;
@@ -33,10 +52,15 @@
     margin-right: 3px;
     padding: 5px;
     background-color: rgba(186, 183, 175,0);
+    color: var(--white-color);
+}
+
+.play-music__icon--size-s{
+    font-size: 2.4rem;
 }
 
 .play-music__icon:hover{
-    background-color: rgba(186, 183, 175,0.5);
+    background-color: rgba(186, 183, 175,0.8);
     cursor: pointer;
     border-radius: 15px;
 }
@@ -51,6 +75,14 @@
 
 .play-music__center{
     flex: 2;
+}
+
+@keyframes rotate {
+    from{
+        transform: rotate(0);
+    }to{
+        transform: rotate(360deg);
+    }
 }
 
 @media screen and (max-width : 768px){

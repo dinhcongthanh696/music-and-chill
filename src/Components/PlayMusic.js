@@ -1,24 +1,25 @@
 import './PlayMusic.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart, faEllipsisH} from "@fortawesome/free-solid-svg-icons";
+import { faHeart , faEllipsisH , faCirclePlay , faCirclePause} from "@fortawesome/free-solid-svg-icons";
 import {useState} from 'react'
+import {MUSICPLAYERFOOTER} from './Constants.js'
 function PlayMusic({
     isDisplayedPlayMusic
 }){
     const [isLiked,setLiked] = useState(false);
-
+    const [isPLaying,setPlaying] = useState(false);
 
     return (
         <div className='play-music' style={{
             opacity : isDisplayedPlayMusic ? 1 : 0
         }}>
             <div className='play-music__left'>
-                <div className='play-music__image'>
-                    <h1>Ảnh</h1>
+                <div className='play-music__image-wrapper'>
+                    <img src={MUSICPLAYERFOOTER.thumbnailCDN} alt='Song thumbnail' className={`play-music__image ${isPLaying ? 'play-music__image--playing' : ''}`}/>
                 </div>
                 <div className='play-music__description'>
-                    <h1 className='play-music__song'>Tên bài hát</h1>
-                    <h1 className='play-music__singer'>Tên ca sĩ</h1>
+                    <h3 className='play-music__song'>{MUSICPLAYERFOOTER.songName}</h3>
+                    <p className='play-music__singer'>{MUSICPLAYERFOOTER.artist}</p>
                 </div>
                 <div className='play-music__option'>
                     <span>
@@ -30,7 +31,7 @@ function PlayMusic({
                 </div>
             </div>
             <div className='play-music__center'>
-                <h1>Center</h1>
+                <FontAwesomeIcon icon={isPLaying ? faCirclePause : faCirclePlay} className='play-music__icon play-music__icon--size-s' onClick={() => setPlaying(!isPLaying)}></FontAwesomeIcon>
             </div>  
             <div className='play-music__right'>
                 <h1>Right</h1>

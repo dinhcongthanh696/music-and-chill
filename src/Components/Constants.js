@@ -34,3 +34,9 @@ export const SLIDEARRAYS = [
     ]
 
 export const HISTORYSEARCHITEMSIZE = 4;
+
+export const MUSICPLAYERFOOTER = {
+    thumbnailCDN : 'https://i1.sndcdn.com/artworks-6HpX0P6FNRRylGRy-KYjuvg-t500x500.jpg',
+    songName : 'Tình đã đầy một tim',
+    artist : 'Huyền Tâm Môn'
+}

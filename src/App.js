@@ -36,7 +36,6 @@ function App() {
   return (
     <div className="App">
       <PlayMusic isDisplayedPlayMusic={isDisplayedPlayMusic} />
-      <ToastMessages/>
       <a href='#top'></a>
       <PublicHeader windowWidth={windowWidth}/>
       <SlideShow windowWidth={windowWidth}/>
