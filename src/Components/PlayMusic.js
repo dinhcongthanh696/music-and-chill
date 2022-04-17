@@ -1,10 +1,13 @@
 import './PlayMusic.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faEllipsisH} from "@fortawesome/free-solid-svg-icons";
-
+import {useState} from 'react'
 function PlayMusic({
     isDisplayedPlayMusic
 }){
+    const [isLiked,setLiked] = useState(false);
+
+
     return (
         <div className='play-music' style={{
             opacity : isDisplayedPlayMusic ? 1 : 0
@@ -19,7 +22,7 @@ function PlayMusic({
                 </div>
                 <div className='play-music__option'>
                     <span>
-                    <FontAwesomeIcon icon={faHeart} className='play-music__icon'></FontAwesomeIcon>
+                    <FontAwesomeIcon icon={faHeart} className={`play-music__icon ${isLiked ? 'play-music__icon--active' : ''}`} onClick={() => setLiked(!isLiked)}></FontAwesomeIcon>
                     </span>
                     <span>
                     <FontAwesomeIcon icon={faEllipsisH} className='play-music__icon'></FontAwesomeIcon>

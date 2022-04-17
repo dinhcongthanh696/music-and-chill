@@ -71,6 +71,10 @@
 }
 
 @media screen and (max-width : 768px){
+    .footer__inner{
+        flex-direction: column;
+    }
+
     .footer__heading{
         margin: 5px 0 0 0;
         font-size: 1.4rem;
@@ -78,6 +82,10 @@
 
     .social-media-image{
         width: 25px;
+    }
+
+    .footer__playlist,.footer__songs{
+        font-size: 1.2rem;
     }
 
     .footer__top-search-body,.footer__social-media-body{

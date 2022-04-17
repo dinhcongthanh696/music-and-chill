@@ -112,6 +112,10 @@
     opacity: .5;
 }
 
+.header__history-item{
+    margin-bottom: 5px;
+}
+
 .header__mobile-nav-list{
     display: none;
     transform-origin: top;

@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp , faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import ToastMessages from './Components/ToastMessages';
 import PlayMusic from './Components/PlayMusic';
+import Modal from './Components/Modal';
 function App() {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [isDisplayedGototop,setDislayedGototop] = useState(false);
