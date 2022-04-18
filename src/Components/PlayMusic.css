@@ -30,6 +30,7 @@
 .play-music__image{
     object-fit: contain;
     width: 100px;
+    margin-right: 10px;
     border-radius: 200px;
 }
 
@@ -75,6 +76,55 @@
 
 .play-music__center{
     flex: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.play-music__controls{
+    margin-bottom: 10px;
+}
+
+.play-music__slider{
+    width: 80%;
+    margin: 0 auto;
+    background: transparent;
+    -webkit-appearance: none;  /* tell browser do noting with input range */
+}
+
+
+
+input[type=range]::-webkit-slider-runnable-track{
+    cursor: pointer;
+    height: 5px;
+    outline-style: none;
+    border-radius: 50px;
+}
+
+.play-music__slider::-webkit-slider-thumb{
+    -webkit-appearance: none;
+    margin-top: -3px;
+    width: 14px;
+    height: 14px;
+    background: white;
+    border-radius: 35px;
+    opacity: 0;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    transition: opacity 0.2s ease-in;
+}
+
+.play-music__slider::-webkit-slider-runnable-track:hover{
+    height: 6px;
+}
+
+input[type=range]:hover::-webkit-slider-thumb {
+    opacity: 1;
+}
+
+.play-music__time{
+    color: var(--white-color);
+    margin: 0 10px;
+    font-size: 1.3rem;
+    font-weight: 600;
 }
 
 @keyframes rotate {
