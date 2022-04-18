@@ -13,6 +13,7 @@ function PlayMusic({
 
     const handlePlayMusic = () => {
         setPlaying(!isPLaying);
+        console.log(audioRef.current);
         if(isPLaying){
             audioRef.current.pause();
             clearInterval(musicPlayerInterval.current);

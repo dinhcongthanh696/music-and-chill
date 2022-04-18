@@ -1,6 +1,7 @@
 .footer{
     background-image: var(--primary-color);
     color: var(--white-color);
+    padding-bottom: 100px;
 }
 
 .footer__inner{
@@ -49,6 +50,10 @@
     margin: 0 10px;
 }
 
+.social-media-image:hover{
+    opacity: 0.7;
+}
+
 .play-list__item,.song__item{
     list-style-type: none;
     width: 300px;
@@ -90,5 +95,9 @@
 
     .footer__top-search-body,.footer__social-media-body{
         margin-top: 16px;
+    }
+
+    .footer-item__icon{
+        font-size: 1.2rem;
     }
 }

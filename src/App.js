@@ -46,10 +46,6 @@ function App() {
         <div className='go-to-top' style={{opacity : isDisplayedGototop ? 1 : 0}}>
           <a href='#top'> <FontAwesomeIcon icon={faArrowUp} /> GO TO TOP </a>
         </div> 
-        <button onClick={() => {
-          setDisplayedPlayMusic(true);
-          localStorage.setItem("is-displayed-play-music","show");
-        }}>Play music</button>
     </div>
   );
 }

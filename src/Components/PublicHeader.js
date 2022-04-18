@@ -141,7 +141,7 @@ function PublicHeader({windowWidth}){
                     <nav className='header__nav'>
                         {NAVBARS.map((bar,index) => {
                             return (
-                                <li key={index}>
+                                <li key={index} className='nav-item'>
                                     <Link to={bar.link}
                                     className={`nav-link ${window.location.pathname === bar.link ? 'active-nav-link' : '' }` }
                                     onClick={() => setCurrentNavBar(index)}> 
