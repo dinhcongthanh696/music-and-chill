@@ -147,7 +147,9 @@ function PublicHeader({windowWidth}){
                                     onClick={() => setCurrentNavBar(index)}> 
                                             {bar.title}
                                     </Link>
+                                    <div className='header__menu'>Menu</div>
                                 </li>
+                                
                             )
                         })}
                     </nav>
@@ -171,7 +173,9 @@ function PublicHeader({windowWidth}){
                                         onClick={() => setCurrentNavBar(index)}> 
                                                 {bar.title}
                                         </Link>
+                                        
                                     </li>
+                                    
                                 )
                             })}
                     </nav>

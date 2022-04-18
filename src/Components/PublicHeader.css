@@ -3,6 +3,7 @@
     padding: 20px;
     margin-bottom: 0;
     position: relative;
+    z-index: 20;
 }
 
 .header--mobile{
@@ -92,6 +93,7 @@
 
 .nav-link{
     font-size: 1.8rem;
+    position: relative;
 }
 
 .active-nav-link{
@@ -146,6 +148,7 @@
         font-size: 2rem;
     }
 
+
     .header__mobile__nav li{
         list-style-type: none;
         width: 100%;
@@ -157,6 +160,22 @@
         font-weight: 650;
     }
 
+}
+
+.header__menu{
+    background-color: var(--white-color);
+    position: absolute;
+    left: 11px;
+    top: 70px;
+    opacity: 0;
+    z-index: 30;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    height: 500px;
+    width: 1000px;
+    border-radius: 1px;
+}
+.nav-link:hover + .header__menu{
+    opacity: 1;
 }
 
 .header__search-history{
