@@ -1,6 +1,6 @@
 import './PlayMusic.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart , faEllipsisH , faCirclePlay , faCirclePause} from "@fortawesome/free-solid-svg-icons";
+import { faHeart , faEllipsisH , faCirclePlay , faCirclePause, faAngleDoubleRight, faAngleDoubleLeft} from "@fortawesome/free-solid-svg-icons";
 import {useState , useRef , useEffect} from 'react'
 import {MUSICPLAYERFOOTER} from './Constants.js'
 function PlayMusic({
@@ -13,7 +13,6 @@ function PlayMusic({
 
     const handlePlayMusic = () => {
         setPlaying(!isPLaying);
-        console.log(audioRef.current);
         if(isPLaying){
             audioRef.current.pause();
             clearInterval(musicPlayerInterval.current);
@@ -27,6 +26,18 @@ function PlayMusic({
                 seekSliderRef.current.style.background = `linear-gradient(to right, #05d7f7 0% , #05d7f7 ${(seekSliderRef.current.value - seekSliderRef.current.min) / (seekSliderRef.current.max - seekSliderRef.current.min) * 100}% , #fff ${(seekSliderRef.current.value - seekSliderRef.current.min) / (seekSliderRef.current.max - seekSliderRef.current.min) * 100}% , #fff 100%)`;
             },1000);
         }
+    }
+
+    const handleTasselsMusic = (time) => {
+        var changedtime = parseInt(seekSliderRef.current.value) + time;
+        if(changedtime < 0 || changedtime > MUSICPLAYERFOOTER.duration){
+            changedtime = 0;
+        }
+        seekSliderRef.current.value = changedtime;
+        audioRef.current.currentTime = changedtime;
+        console.log(time);
+        seekSliderRef.current.style.background =  `linear-gradient(to right, #05d7f7 0%, #05d7f7 ${(seekSliderRef.current.value - seekSliderRef.current.min) / (seekSliderRef.current.max - seekSliderRef.current.min) * 100}% , #fff ${(seekSliderRef.current.value - seekSliderRef.current.min) / (seekSliderRef.current.max - seekSliderRef.current.min) * 100}% , #fff 100%)`;
+        setCurrentAudioTime(changedtime);
     }
 
 
@@ -90,11 +101,13 @@ function PlayMusic({
                     <source type='audio/mpeg' src='./images/tinh-da-day-mot-tim.mp3'></source>
                 </audio>
                 <div className='play-music__controls'>
+                    <FontAwesomeIcon icon={faAngleDoubleLeft} className='play-music__icon' onClick={() => handleTasselsMusic(-15)}></FontAwesomeIcon>
                     <FontAwesomeIcon 
                     icon={isPLaying ? faCirclePause : faCirclePlay} 
                     className='play-music__icon play-music__icon--size-s' 
                     onClick={handlePlayMusic}>
                     </FontAwesomeIcon>
+                    <FontAwesomeIcon icon={faAngleDoubleRight} className='play-music__icon' onClick={() => handleTasselsMusic(15)}></FontAwesomeIcon>
                 </div>
                 <div className='play-music__seeker'>
                     <span className='play-music__time'>{toRealTime(currentAudioTime)}</span>

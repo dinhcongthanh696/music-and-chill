@@ -4,7 +4,7 @@
     width: 100%;
     position: fixed;
     bottom: 0px;
-    z-index: 11;
+    z-index: 15;
     display: flex;
     justify-content: space-around;
 }
@@ -55,6 +55,7 @@
     background-color: rgba(186, 183, 175,0);
     color: var(--white-color);
 }
+
 
 .play-music__icon--size-s{
     font-size: 2.8rem;
