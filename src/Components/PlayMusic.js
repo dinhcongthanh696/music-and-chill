@@ -33,11 +33,7 @@ function PlayMusic({
         if(changedtime < 0 || changedtime > MUSICPLAYERFOOTER.duration){
             changedtime = 0;
         }
-        seekSliderRef.current.value = changedtime;
-        audioRef.current.currentTime = changedtime;
-        console.log(time);
-        seekSliderRef.current.style.background =  `linear-gradient(to right, #05d7f7 0%, #05d7f7 ${(seekSliderRef.current.value - seekSliderRef.current.min) / (seekSliderRef.current.max - seekSliderRef.current.min) * 100}% , #fff ${(seekSliderRef.current.value - seekSliderRef.current.min) / (seekSliderRef.current.max - seekSliderRef.current.min) * 100}% , #fff 100%)`;
-        setCurrentAudioTime(changedtime);
+        timingEffects(changedtime);
     }
 
 
@@ -48,16 +44,19 @@ function PlayMusic({
         return result;
     }
 
+    const timingEffects = (time) => {
+        seekSliderRef.current.value = time;
+        audioRef.current.currentTime = time;
+        seekSliderRef.current.style.background =  `linear-gradient(to right, #05d7f7 0%, #05d7f7 ${(seekSliderRef.current.value - seekSliderRef.current.min) / (seekSliderRef.current.max - seekSliderRef.current.min) * 100}% , #fff ${(seekSliderRef.current.value - seekSliderRef.current.min) / (seekSliderRef.current.max - seekSliderRef.current.min) * 100}% , #fff 100%)`;
+        setCurrentAudioTime(time);
+    }
+
     const audioRef = useRef();
     const musicPlayerInterval = useRef();
 
     useEffect(() => {
-        const min = seekSliderRef.current.min;
-        const max = seekSliderRef.current.max;
-        const value = 0;
-        seekSliderRef.current.value = value;
-        const breakPoint = (value - min) / (max - min) * 100;
-        seekSliderRef.current.style.background = "linear-gradient(to right, #05d7f7 0% , #05d7f7 "+ breakPoint +"% , #fff "+ breakPoint + "% , #fff 100%)";
+        seekSliderRef.current.value = 0;
+        seekSliderRef.current.style.background = `linear-gradient(to right, #05d7f7 0% , #05d7f7 ${(seekSliderRef.current.value - seekSliderRef.current.min) / (seekSliderRef.current.max - seekSliderRef.current.min) * 100}% , #fff ${(seekSliderRef.current.value - seekSliderRef.current.min) / (seekSliderRef.current.max - seekSliderRef.current.min) * 100}% , #fff 100%)`;
         seekSliderRef.current.addEventListener("input",() => {
             seekSliderRef.current.style.background = `linear-gradient(to right, #05d7f7 0% , #05d7f7 ${(seekSliderRef.current.value - seekSliderRef.current.min) / (seekSliderRef.current.max - seekSliderRef.current.min) * 100}% , #fff ${(seekSliderRef.current.value - seekSliderRef.current.min) / (seekSliderRef.current.max - seekSliderRef.current.min) * 100}% , #fff 100%)`;
             setCurrentAudioTime(seekSliderRef.current.value);

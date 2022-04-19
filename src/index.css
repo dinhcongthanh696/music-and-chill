@@ -13,6 +13,11 @@ body {
   --primary-color : linear-gradient(to bottom, #35adfc , #9fd7fc);
   --navbar-mobile-height : 200px;
   font-size: 62.5%;
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* */
 }
 
 code {
