@@ -4,7 +4,8 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 function Modal(
     {
         heading,
-        children
+        children,
+        setDisPlayModal
     }
 ){
     return (
@@ -12,7 +13,7 @@ function Modal(
             <div className='modal__inner'>
                 <div className='modal__header'>
                     <h1 className='modal__heading'>{heading}</h1>
-                    <FontAwesomeIcon icon={faXmark} className="modal__close-icon" />
+                    <FontAwesomeIcon icon={faXmark} className="modal__close-icon" onClick={() => setDisPlayModal(false)}/>
                 </div>
                 <div className='modal__content'>
                     {children}

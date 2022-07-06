@@ -20,6 +20,8 @@
 }
 .play-music__image-wrapper{
     flex: 1;
+    width: 100px;
+    height: 100px;
 }
 
 .play-music__song{
@@ -28,10 +30,15 @@
 }
 
 .play-music__image{
-    object-fit: contain;
+    object-fit: fill;
     width: 100px;
+    height: 100px;
     margin-right: 10px;
     border-radius: 200px;
+}
+
+.play-music__image--rectangle{
+    border-radius: 2px;
 }
 
 .play-music__image--playing{
@@ -85,6 +92,10 @@
     margin-bottom: 10px;
 }
 
+.play-music__song--text-black,.play-music__singer--text-black{
+    color:  black;
+}
+
 .play-music__slider{
     width: 80%;
     margin: 0 auto;
@@ -92,13 +103,24 @@
     -webkit-appearance: none;  /* tell browser do noting with input range */
 }
 
+.play-music__slider--size-s{
+    width: 60%;
+}
 
+.play-music__volume-control{
+    height: 6px;
+    border-radius: 60px;
+}
+
+.play-music__volume-control:hover{
+    height: 9px;
+}
 
 input[type=range]::-webkit-slider-runnable-track{
     cursor: pointer;
     height: 5px;
     outline-style: none;
-    border-radius: 200px;
+    border-radius: 300px;
 }
 
 .play-music__slider::-webkit-slider-thumb{
@@ -114,7 +136,7 @@ input[type=range]::-webkit-slider-runnable-track{
 }
 
 .play-music__slider::-webkit-slider-runnable-track:hover{
-    height: 6px;
+    height: 7px;
 }
 
 input[type=range]:hover::-webkit-slider-thumb {
@@ -126,6 +148,10 @@ input[type=range]:hover::-webkit-slider-thumb {
     margin: 0 10px;
     font-size: 1.3rem;
     font-weight: 600;
+}
+
+.play-music__right{
+    display: flex;
 }
 
 @keyframes rotate {

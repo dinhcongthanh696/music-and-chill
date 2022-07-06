@@ -11,6 +11,9 @@ body {
   --white-color : #fff;
   --header-background-color : linear-gradient(to bottom, #35adfc , #9fd7fc) ;
   --primary-color : linear-gradient(to bottom, #35adfc , #9fd7fc);
+  --black-theme : linear-gradient(to bottom , #0f0f0f , #d4d2d2);
+  --violet-theme : linear-gradient(to bottom , #b24ef5 , #cd90f5);
+  --main-color : #35adfc;
   --navbar-mobile-height : 200px;
   font-size: 62.5%;
   -webkit-user-select: none; /* Safari */
@@ -38,6 +41,62 @@ code {
   background-image: var(--primary-color);
   border: 0;
   color: var(--white-color);
+}
+
+.ocean-theme{
+    background-image: var(--primary-color) !important;
+}
+
+.black-theme{
+  background-image: var(--black-theme) !important;
+}
+
+.violet-theme{
+  background-image: var(--violet-theme) !important;
+}
+
+.icon{
+    margin-top: 20px;
+    font-size: 1.6rem;
+    display: inline;
+    margin-left: 3px;
+    margin-right: 3px;
+    padding: 5px;
+    background-color: rgba(186, 183, 175,0);
+    color: var(--white-color);
+}
+
+.icon--ocean{
+  color: var(--main-color);
+}
+
+.icon--yellow{
+  color: yellow;
+}
+
+.icon--size-l{
+  font-size: 2rem;
+}
+
+.clickable:hover{
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.clickable{
+  color: var(--main-color);
+}
+
+.icon:hover{
+    background-color: rgba(186, 183, 175,0.8);
+    cursor: pointer;
+    border-radius: 15px;
+}
+
+.active{
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--main-color);
 }
 
 

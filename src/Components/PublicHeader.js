@@ -1,31 +1,35 @@
 import './PublicHeader.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch , faBars , faXmark} from "@fortawesome/free-solid-svg-icons";
-import {useState , useEffect , useRef} from 'react'
-import {NAVBARS , HISTORYSEARCHITEMSIZE} from './Constants.js';
-import {Link} from 'react-router-dom'
-function PublicHeader({windowWidth}){
+import { faSearch , faBars , faXmark , faShare , faRainbow} from "@fortawesome/free-solid-svg-icons";
+import {useState , useEffect , useRef, Suspense , startTransition , useContext} from 'react'
+import { topKeyWordPromise , addKeyWordPromise } from '../Service/keyWordService';
+import {Link} from 'react-router-dom';
+import  store from "../Store/store";
+import { logout, resetFilesState , resetFeatureState} from "../Action/Actions";
+import { queryArtistAndTrackPromise } from '../Service/commonService';
+import { ThemeContext } from '../Context/ThemeContext';
+import { useSelector } from 'react-redux/es/exports';
+import { useDispatch } from 'react-redux/es/hooks/useDispatch';
+import { selectCurrentNavIndex  , selectNavbars} from '../Slice/featureSlice';
+import { navigating } from '../Action/Actions';
+function PublicHeader({ windowWidth ,
+     setDisplayedThemeSelectionModal ,
+     setDisplayedFormLogin , 
+     setAuthenticated , 
+     isAuthenticated }){
     const [query,setQuery] = useState("");
     const [isTriggeredMobileNavbar,setTriggeredMobileNavbar] = useState(false);
-    const [isDisplayedHistory , setDisplayedHistory] = useState(false);
-    const [currentNavBar, setCurrentNavBar] = useState(0);
-    const [historySearch,setHistorySearch] = useState(() => {
-        const historySearchesRawString = localStorage.getItem("history-searches");
-        const historySearchsArray = JSON.parse(historySearchesRawString);
-        if(!Array.isArray(historySearchsArray)) return [];
-        return historySearchsArray;
-    })
+    const [isDisplayedRecommendation , setDisplayedRecommendation] = useState(false);
+    const [searchItems , setSerachItems] = useState();
+    const [keywords , setKeyWords] = useState([]);
+    const themeValue = useContext(ThemeContext);
+    const currentNavbarIndex = useSelector(selectCurrentNavIndex);
+    const navbars = useSelector(selectNavbars);
+    const dispatcher = useDispatch();
+    const currentUser = store.getState().userReducer.currentUser;
     const inputRef = useRef();
     const historyRef = useRef();
     const buttonSearchRef = useRef();
-
-    const handleRemoveHistory = (index) => {
-        const newHistory = historySearch.filter((search,searchIndex) => {
-            return searchIndex !== index;
-        });
-        setHistorySearch(newHistory);
-        localStorage.setItem("history-searches",JSON.stringify(newHistory));
-    }
 
     const handleMobileNavIconClick = (isTriggered) => {
         setTriggeredMobileNavbar(isTriggered);
@@ -33,41 +37,38 @@ function PublicHeader({windowWidth}){
 
     const handleQuery = (inputValue) => {
         setQuery(inputValue);
+        startTransition(() => {
+            queryArtistAndTrackPromise(inputValue).then(searchItems => {
+                setSerachItems(searchItems);
+            })
+        })
+    }
+
+    const handleNavbarClick = (index) => {
+        dispatcher(navigating(index));
+    }
+
+    const logoutHandle = (event) => {
+        event.preventDefault();
+        store.dispatch(logout());
+        setAuthenticated(false);
     }
 
     const handleSearchFocus = (isFocused) => {
-        setDisplayedHistory(isFocused);
+        setDisplayedRecommendation(isFocused);
     }
 
     const handleCompleInputField = (value) => {
         setQuery(value);
-        setDisplayedHistory(false);
+    }
+
+    const loginFormTriggerHandle = (event) => {
+        event.preventDefault();
+        setDisplayedFormLogin(true);
     }
 
     const handleSearch = () => {
-        const query = inputRef.current.value;
-        var isDuplicated = false;
-        for(let i = 0 ; i < historySearch.length ; i++){
-            if(historySearch[i] === query.trim()){
-                isDuplicated = true;
-            }
-        }
-        var newHistory = [
-            ...historySearch
-        ];
-        if(!isDuplicated){
-            newHistory.push(query.trim());
-        }
-
-        if(newHistory.length > HISTORYSEARCHITEMSIZE) {
-            const overSizedHistory = newHistory.slice(1,newHistory.length);
-            newHistory = overSizedHistory; 
-            console.log(newHistory);
-        }
-        setHistorySearch(newHistory)
-        inputRef.current.focus();
-        setQuery("");
-        localStorage.setItem("history-searches",JSON.stringify(newHistory));
+        addKeyWordPromise(query);
     }
 
     useEffect(() => {
@@ -76,15 +77,20 @@ function PublicHeader({windowWidth}){
                 event.target !== historyRef.current && 
                 ! historyRef.current.contains(event.target) && 
                 ! buttonSearchRef.current.contains(event.target)){
-                    setDisplayedHistory(false);
+                    setDisplayedRecommendation(false);
                 }
         }
+
+        topKeyWordPromise().then(keywords => {
+            setKeyWords(keywords);
+        })
 
         window.addEventListener("click",handleClick);
         return () => {
              window.removeEventListener("click",handleClick);
         }
     },[])
+
 
     useEffect(() => {
         if(windowWidth > 768){
@@ -93,7 +99,7 @@ function PublicHeader({windowWidth}){
     },[windowWidth])
 
     return (
-        <div className={isTriggeredMobileNavbar ? 'header header--mobile' : 'header'}>
+        <div className={isTriggeredMobileNavbar ? `header header--mobile ${themeValue.theme}` : `header ${themeValue.theme}`}>
             <div className='header-top-wrapper'>
                 <div className='header__logo'>
                     <img className='header__logo-img' src='images/header-logo.jpg' />
@@ -103,10 +109,10 @@ function PublicHeader({windowWidth}){
                            placeholder='Search...' ref={inputRef} 
                            value={query} onChange={(event) => handleQuery(event.target.value)} 
                            onFocus={() => handleSearchFocus(true)}/>
-                    <button className='header__search-button btn btn-primary' onClick={handleSearch} ref={buttonSearchRef}>
+                    <button className={`header__search-button btn btn-primary ${themeValue.theme}`} onClick={handleSearch} ref={buttonSearchRef}>
                         <FontAwesomeIcon icon={faSearch} /> 
                     </button>
-                    {   isDisplayedHistory &&
+                    {   isDisplayedRecommendation &&
                         query.trim().length !== 0 && 
                         <FontAwesomeIcon 
                             icon={faXmark} 
@@ -114,37 +120,49 @@ function PublicHeader({windowWidth}){
                             onClick={() => setQuery('')} 
                         />
                     }
-                    <div className='header__search-history' style={{display : (isDisplayedHistory) ? 'block' : 'none'}} 
+                    <div className='header__search-keywords' style={{display : isDisplayedRecommendation && query.length === 0 ? 'block' : 'none'}}>
+                        <div className='header__history-heading'>Tìm kiếm nhiều nhất</div>
+                        <ul className='header__history-list'>
+                            {keywords.map((keyword , index) => {
+                                return (
+                                    <li className='header__history-item' key={index}>
+                                        <div className='history-item__left'>
+                                             <FontAwesomeIcon icon={faShare} className='header__search-icon'/>
+                                        </div>
+                                        <div className='history-item__right'>
+                                            <div className='history-search-word'>{keyword.keyWordId.keyword}</div>
+                                        </div>
+                                    </li>
+                                )
+                            })}
+                        </ul>
+                    </div>
+                    <div className='header__search-history' style={{display : (isDisplayedRecommendation && query.length !== 0) ? 'block' : 'none'}} 
                          ref={historyRef} >
-                        <div className='header__history-heading'>Lịch sử tìm kiếm</div>
-                        <div className='header__history-body'>
-                            <ul className='header__history-list'>
-                                {historySearch.map((history,index) => {
-                                    return (
-                                        <li key={index} style={{display : (history.trim().includes(query.trim()) ? 'list-item' : 'none')}} 
-                                        className="header__history-item"
-                                        onClick={() => handleCompleInputField(history)}
-                                        >
-                                            {history}
-                                            <FontAwesomeIcon icon={faXmark} className="header__history-close-icon" 
-                                                onClick={(event) => {
-                                                    event.stopPropagation();
-                                                    handleRemoveHistory(index);
-                                                }}
-                                            />
-                                        </li>
-                                    )
-                                })}
-                            </ul>
-                        </div>
+                        <div className='header__history-heading'>Gợi ý kết quả </div>
+                        <ul className='header__history-list'>
+                            {searchItems && searchItems.map( (searchItem , index) => {
+                                return(
+                                    <li className='header__history-item' key={index}>
+                                        <div className='history-item__left'>
+                                            <img src={searchItem.imageBase64Encode} className='history-item__image'/>
+                                        </div>
+                                        <div className='history-item__right'>
+                                            <div className='history-item__title'>{searchItem.title}</div>
+                                            <div className='history-item__description'>{searchItem.description}</div>
+                                        </div>
+                                    </li>
+                                )
+                            })}
+                        </ul>  
                     </div>
                     <nav className='header__nav'>
-                        {NAVBARS.map((bar,index) => {
+                        {navbars.map((bar,index) => {
                             return (
                                 <li key={index} className='nav-item'>
                                     <Link to={bar.link}
-                                    className={`nav-link ${window.location.pathname === bar.link ? 'active-nav-link' : '' }` }
-                                    onClick={() => setCurrentNavBar(index)}> 
+                                    className={`nav-link ${index === currentNavbarIndex ? 'active-nav-link' : '' }` }
+                                    onClick={() => handleNavbarClick(index)}> 
                                             {bar.title}
                                     </Link>
                                     <div className='header__menu'>Menu</div>
@@ -154,9 +172,16 @@ function PublicHeader({windowWidth}){
                         })}
                     </nav>
                 </div>
+                <div className='header__options'>
+                        <FontAwesomeIcon icon={faRainbow} className='icon' title='Thay đổi theme' onClick={() => setDisplayedThemeSelectionModal(true)}/>
+                        
+                </div>
                 <div className='header__authentication'>
-                    <a href="#" className='header__authentication-link'>Đăng ký</a>
-                    <a href ="#" className='header__authentication-link'>Đăng nhập</a>
+                    {isAuthenticated ? <span className='header__authentication-link'> Hello {currentUser.username} </span> : 
+                    <a href="#" className='header__authentication-link'>Đăng ký</a>}
+                    {isAuthenticated ? <a href ="#" className='header__authentication-link' onClick={logoutHandle}>Đăng xuất</a> : 
+                    <a href ="#" className='header__authentication-link' onClick={loginFormTriggerHandle}>Đăng nhập</a>
+                    }
                 </div>
                 <div className='header__mobile-nav'>
                     <FontAwesomeIcon icon={isTriggeredMobileNavbar ? faXmark : faBars} 
@@ -165,12 +190,12 @@ function PublicHeader({windowWidth}){
                 </div>
                 <div className='header__mobile-nav-list' style={{display : (isTriggeredMobileNavbar) ? 'block' : 'none'}} >
                     <nav className='header__mobile__nav'>
-                        {NAVBARS.map((bar,index) => {
+                        {navbars.map((bar,index) => {
                                 return (
                                     <li key={index}>
                                         <Link to={bar.link}
-                                        className={`nav-link ${window.location.pathname === bar.link ? 'active-nav-link' : '' }` }
-                                        onClick={() => setCurrentNavBar(index)}> 
+                                        className={`nav-link ${index === currentNavbarIndex ? 'active-nav-link' : '' }` }
+                                        onClick={() => handleNavbarClick(index)}> 
                                                 {bar.title}
                                         </Link>
                                         

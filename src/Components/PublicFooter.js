@@ -2,9 +2,12 @@ import './PublicFooter.css'
 import {memo} from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { useContext } from 'react';
+import { ThemeContext } from '../Context/ThemeContext';
 function PublicFooter(){
+    const themeValue = useContext(ThemeContext); 
     return(
-        <footer className="footer">
+        <footer className={`footer ${themeValue.theme}`}>
             <div className='footer__inner'>
                 <div className='footer__left'>
                     <div className='footer__playlist'>
@@ -60,7 +63,9 @@ function PublicFooter(){
                             <a href='https://www.instagram.com/dinhcongthanh1234/' target='_blank'>
                             <img className='social-media-image' alt='instagram' src='https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/768px-Instagram_logo_2016.svg.png'/>
                             </a>
+                            <a href='https://www.instagram.com/dinhcongthanh1234/' target='_blank'>
                             <img className='social-media-image' alt='zalo' src='https://seeklogo.com/images/Z/zalo-logo-B0A0B2B326-seeklogo.com.png'/>
+                            </a>
                         </div>
                     </div>
                 </div>

@@ -1,15 +1,24 @@
 import './PlayMusic.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart , faEllipsisH , faCirclePlay , faCirclePause, faAngleDoubleRight, faAngleDoubleLeft} from "@fortawesome/free-solid-svg-icons";
-import {useState , useRef , useEffect} from 'react'
-import {MUSICPLAYERFOOTER} from './Constants.js'
-function PlayMusic({
-    isDisplayedPlayMusic
-}){
+import { faHeart , faEllipsisH , faCirclePlay , 
+    faCirclePause, faAngleDoubleRight, faAngleDoubleLeft ,
+    faVolumeUp
+} from "@fortawesome/free-solid-svg-icons";
+import { getTrackPromise } from '../Service/trackService';
+import {useState , useRef , useEffect , useContext} from 'react'
+import { MAX_VOLUME , MIN_VOLUME} from './Constants.js'
+import {updateSeekControlValue , updateSeekControlBackGround} from './PlayMusicService'
+import { ThemeContext } from '../Context/ThemeContext';
+function PlayMusic(){
     const [isLiked,setLiked] = useState(false);
     const [isPLaying,setPlaying] = useState(false);
     const [currentAudioTime,setCurrentAudioTime] = useState(0);
+    const [playingTrack,setPlayingTrack] = useState();
     const seekSliderRef = useRef();
+    const volumeSliderRef = useRef();
+    const audioRef = useRef();
+    const musicPlayerInterval = useRef();
+    const themeValue = useContext(ThemeContext);
 
     const handlePlayMusic = () => {
         setPlaying(!isPLaying);
@@ -22,15 +31,15 @@ function PlayMusic({
                 setCurrentAudioTime(prevState => {
                     return parseInt(prevState) + 1;
                 });
-                seekSliderRef.current.value++;
-                seekSliderRef.current.style.background = `linear-gradient(to right, #05d7f7 0% , #05d7f7 ${(seekSliderRef.current.value - seekSliderRef.current.min) / (seekSliderRef.current.max - seekSliderRef.current.min) * 100}% , #fff ${(seekSliderRef.current.value - seekSliderRef.current.min) / (seekSliderRef.current.max - seekSliderRef.current.min) * 100}% , #fff 100%)`;
+                updateSeekControlValue(seekSliderRef.current,parseInt(seekSliderRef.current.value) + 1);
+                updateSeekControlBackGround(seekSliderRef.current,'#05d7f7');
             },1000);
         }
     }
 
     const handleTasselsMusic = (time) => {
         var changedtime = parseInt(seekSliderRef.current.value) + time;
-        if(changedtime < 0 || changedtime > MUSICPLAYERFOOTER.duration){
+        if(changedtime < 0 || changedtime > 0){
             changedtime = 0;
         }
         timingEffects(changedtime);
@@ -45,46 +54,47 @@ function PlayMusic({
     }
 
     const timingEffects = (time) => {
-        seekSliderRef.current.value = time;
         audioRef.current.currentTime = time;
-        seekSliderRef.current.style.background =  `linear-gradient(to right, #05d7f7 0%, #05d7f7 ${(seekSliderRef.current.value - seekSliderRef.current.min) / (seekSliderRef.current.max - seekSliderRef.current.min) * 100}% , #fff ${(seekSliderRef.current.value - seekSliderRef.current.min) / (seekSliderRef.current.max - seekSliderRef.current.min) * 100}% , #fff 100%)`;
+        updateSeekControlValue(seekSliderRef.current,time);
+        updateSeekControlBackGround(seekSliderRef.current,'#05d7f7');
         setCurrentAudioTime(time);
     }
 
-    const audioRef = useRef();
-    const musicPlayerInterval = useRef();
-
     useEffect(() => {
-        seekSliderRef.current.value = 0;
-        seekSliderRef.current.style.background = `linear-gradient(to right, #05d7f7 0% , #05d7f7 ${(seekSliderRef.current.value - seekSliderRef.current.min) / (seekSliderRef.current.max - seekSliderRef.current.min) * 100}% , #fff ${(seekSliderRef.current.value - seekSliderRef.current.min) / (seekSliderRef.current.max - seekSliderRef.current.min) * 100}% , #fff 100%)`;
+        updateSeekControlValue(seekSliderRef.current , 0);
+        updateSeekControlValue(volumeSliderRef.current,MAX_VOLUME);
+        updateSeekControlBackGround(seekSliderRef.current,'#05d7f7');
+        updateSeekControlBackGround(volumeSliderRef.current , '#0afab2');
         seekSliderRef.current.addEventListener("input",() => {
-            seekSliderRef.current.style.background = `linear-gradient(to right, #05d7f7 0% , #05d7f7 ${(seekSliderRef.current.value - seekSliderRef.current.min) / (seekSliderRef.current.max - seekSliderRef.current.min) * 100}% , #fff ${(seekSliderRef.current.value - seekSliderRef.current.min) / (seekSliderRef.current.max - seekSliderRef.current.min) * 100}% , #fff 100%)`;
+            updateSeekControlBackGround(seekSliderRef.current,'#05d7f7');
             setCurrentAudioTime(seekSliderRef.current.value);
             audioRef.current.currentTime = seekSliderRef.current.value;
         })
+        volumeSliderRef.current.addEventListener('input',() => {
+            updateSeekControlBackGround(volumeSliderRef.current , '#0afab2');
+            audioRef.current.volume = volumeSliderRef.current.value;
+        })
+        
     },[])
 
     useEffect(() => {
-        if(currentAudioTime == MUSICPLAYERFOOTER.duration){
+        if(currentAudioTime == 0){
             clearInterval(musicPlayerInterval.current);
-            seekSliderRef.current.value = 0;
-            seekSliderRef.current.style.background = `linear-gradient(to right, #05d7f7 0% , #05d7f7 ${(0 - seekSliderRef.current.min) / (seekSliderRef.current.max - seekSliderRef.current.min) * 100}% , #fff ${(0 - seekSliderRef.current.min) / (seekSliderRef.current.max - seekSliderRef.current.min) * 100}% , #fff 100%)`;
+            updateSeekControlValue(seekSliderRef.current,0);
             setCurrentAudioTime(0);
             setPlaying(false);
         }
     },[currentAudioTime])
 
     return (
-        <div className='play-music' style={{
-            opacity : isDisplayedPlayMusic ? 1 : 0
-        }}>
+        <div className={`play-music ${themeValue.theme}`}>
             <div className='play-music__left'>
                 <div className='play-music__image-wrapper'>
-                    <img src={MUSICPLAYERFOOTER.thumbnailCDN} alt='Song thumbnail' className={`play-music__image ${isPLaying ? 'play-music__image--playing' : ''}`}/>
+                    <img src={''} alt='Song thumbnail' className={`play-music__image ${isPLaying ? 'play-music__image--playing' : ''}`}/>
                 </div>
                 <div className='play-music__description'>
-                    <h3 className='play-music__song'>{MUSICPLAYERFOOTER.songName}</h3>
-                    <p className='play-music__singer'>{MUSICPLAYERFOOTER.artist}</p>
+                    <h3 className='play-music__song'>{''}</h3>
+                    <p className='play-music__singer'>{''}</p>
                 </div>
                 <div className='play-music__option'>
                     <span>
@@ -97,7 +107,7 @@ function PlayMusic({
             </div>
             <div className='play-music__center'>
                 <audio ref={audioRef}>
-                    <source type='audio/mpeg' src='./images/tinh-da-day-mot-tim.mp3'></source>
+                    <source type='audio/mpeg' src={playingTrack ? playingTrack.preview_url : ''}></source>
                 </audio>
                 <div className='play-music__controls'>
                     <FontAwesomeIcon icon={faAngleDoubleLeft} className='play-music__icon' onClick={() => handleTasselsMusic(-15)}></FontAwesomeIcon>
@@ -110,12 +120,16 @@ function PlayMusic({
                 </div>
                 <div className='play-music__seeker'>
                     <span className='play-music__time'>{toRealTime(currentAudioTime)}</span>
-                    <input type='range' className='play-music__slider' min='0' max={MUSICPLAYERFOOTER.duration} ref={seekSliderRef}/>
-                    <span className='play-music__time'>{toRealTime(MUSICPLAYERFOOTER.duration - currentAudioTime)}</span>
+                    <input type='range' className='play-music__slider' min='0' max={playingTrack ? playingTrack.duration_ms / 1000 : 5} ref={seekSliderRef}/>
+                    <span className='play-music__time'>{toRealTime((playingTrack ? playingTrack.duration_ms / 1000 : 0) - currentAudioTime)}</span>
                 </div>
             </div>  
             <div className='play-music__right'>
-                <h1>Right</h1>
+                <div className='play-music__volume'>
+                    <FontAwesomeIcon icon={faVolumeUp} className="play-music__icon"></FontAwesomeIcon>
+                    <input type='range' className='play-music__volume-control play-music__slider play-music__slider--size-s' 
+                    min={MIN_VOLUME} max={MAX_VOLUME} step={0.1} ref={volumeSliderRef}/>
+                </div>
             </div>
         </div>
     )

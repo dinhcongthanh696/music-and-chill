@@ -1,0 +1,20 @@
+.pages-wrapper{
+    display: flex;
+    justify-content: space-evenly;
+    margin: 10px 0;
+    width: 50%;
+    margin: 20px auto;
+}
+
+.page-item{
+    border-radius: 5px;
+    font-size: 1.4rem;
+    border: 1px solid black;
+    padding: 8px;
+    transition: all linear 0.1s;
+}
+
+.page-item:hover{
+    box-shadow: 0 0 3px 2px;
+    font-size: 1.5rem;
+}

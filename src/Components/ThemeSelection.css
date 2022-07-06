@@ -1,0 +1,25 @@
+.theme-selection{
+    display: flex;
+    justify-content: space-between;
+}
+
+.theme-thumbnail{
+    width: 100px;
+    height: 100px;
+    border-radius: 3px;
+}
+
+.theme-thumbnail:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.theme-description{
+    font-size: 1.6rem;
+    opacity: 0.8;
+}
+
+.theme-description:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}

@@ -1,0 +1,19 @@
+.play-list{
+    position: fixed;
+    height: 100%;
+    width: 150px;
+    right: -150px;
+    z-index: 99;
+    animation: playListSlideLeft ease-in-out 0.6s forwards;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+@keyframes playListSlideLeft {
+    from{
+        right: -150px;
+    }to{
+        right: 0;
+    }
+}

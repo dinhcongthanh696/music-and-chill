@@ -1,0 +1,24 @@
+.settings{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 50vh;
+}
+
+.settings-options{
+    display: flex;
+    justify-content: space-around;
+}
+
+.settings-board{
+    text-align: center;
+}
+
+.folder-chaining{
+    display: flex;
+    font-size: 1.6rem;
+}
+
+.chain{
+    margin: 5px 10px 0 10px;
+}
